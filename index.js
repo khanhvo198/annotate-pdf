@@ -7,8 +7,14 @@ function saveByteArray(reportName, byte) {
   link.click();
 }
 
-const createPDF = () => {
-  pdfAnnotate.AnnotationFactory.loadFile("/123.pdf").then((factory) => {
+const createPDF = async () => {
+  const existingPdfBytes = await fetch("./123.pdf").then((res) =>
+    res.arrayBuffer()
+  );
+  const blob = new Blob([existingPdfBytes], { type: "application/pdf" });
+  const url = URL.createObjectURL(blob);
+
+  pdfAnnotate.AnnotationFactory.loadFile(url).then((factory) => {
     factory.createFreeTextAnnotation({
       page: 1,
       rect: [50, 50, 200, 200],
